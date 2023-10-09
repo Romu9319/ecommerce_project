@@ -8,9 +8,9 @@
     No Space
     --><div class="h-shop">
 
-        <form method="post" action="{% url 'web:productosPorNombre' %}" class="h-search" id="h-search">
+        <form method="post" action="{% url 'web:productsByName' %}" class="h-search" id="h-search">
             {% csrf_token %}
-            <input type="text" name="nombre" placeholder="Buscar...">
+            <input type="text" name="name" placeholder="Search...">
             <button type="submit"><i class="ion-search"></i></button>
         </form>
 
@@ -26,9 +26,5 @@
                     <li><a href="/logout">Logout</a></li>
                 </ul>
             </li>
-
-            {% include 'includes/header_carrito.html' %}
-
-
         </ul>
     </div></div>

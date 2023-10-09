@@ -2,11 +2,11 @@
     <h3 class="widgettitle">Categorias</h3>
     <div class="section-sb-current">
         <ul class="section-sb-list">
-            {% for categoria in categorias %}
+            {% for category in categories %}
             <li>
-                <a href="{% url 'web:productosPorCategoria' categoria.id %}">
-                    <span class="section-sb-label">{{categoria.nombre}} 
-                        <span class="count">{{categoria.producto_set.all.count}}</span>
+               <a href="{% url 'web:productsByCategory' category.id %}">
+                    <span class="section-sb-label">{{category.name}} 
+                       <span class="count">{{category.product_set.all.count}}</span>
                     </span>
                 </a>
             </li>
