@@ -69,17 +69,27 @@
                 <p class="prod-rating-count">7</p>
             </div>
             <p class="prod-categs"><a href="#">{{product.category}}</a></p>
-            <h1>{{product.name}}</h1>
+            <h1>${{product.name}}</h1>
             <div class="variations_form cart">
                 <p class="prod-price">${{product.price}}</p>
-                <p class="prod-excerpt">{{product.description}}... 
+                <p class="prod-excerpt">${{product.description}}... 
                     <a id="prod-showdesc" class="prod-excerpt-more" href="#">read more</a></p>
                 <div class="prod-add">
-                    <form action="" method="post">
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <p>fffffffffffffffffffffffffffffffffff</p>
+                    <form action="{% url "web:addToCar" product.id %}" method="post">
                         {% csrf_token %}
                         <div class="variations">
                             <div class="variations-row">
-                                <div class="label"><label >Сolor</label></div>
+                                <div class="label"><label >Color</label></div>
                                 <div class="value">
                                     <select>
                                         <option value="">Choose an option</option>
@@ -89,20 +99,20 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>  
+                        <div>
+                            <button type="submit" class="button"><i class="icon ion-android-cart"></i> Agregar al Carrito</button>
+                            <p class="qnt-wrap prod-li-qnt">
+                                <a href="#" class="qnt-plus prod-li-plus"><i class="icon ion-arrow-up-b"></i></a>
+                                <input type="text" name="cuantity" value="1">
+                                <a href="#" class="qnt-minus prod-li-minus"><i class="icon ion-arrow-down-b"></i></a>
+                            </p>
                         </div>
-                        <button type="submit" class="button"><i class="icon ion-android-cart"></i> Agregar al Carrito</button>
-                        <p class="qnt-wrap prod-li-qnt">
-                            <a href="#" class="qnt-plus prod-li-plus"><i class="icon ion-arrow-up-b"></i></a>
-                            <input type="text" name="cantidad" value="1">
-                            <a href="#" class="qnt-minus prod-li-minus"><i class="icon ion-arrow-down-b"></i></a>
-                        </p>
                     </form>
                 </div>
             </div>
             <div class="prod-props">
-                <dl class="product_meta">
-                    
-                    
+                <dl class="product_meta">                    
                 </dl>
             </div>
         </div>

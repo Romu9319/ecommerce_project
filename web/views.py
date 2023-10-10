@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Product
+from .car import Car
 
 # Create your views here.
 
@@ -52,3 +53,36 @@ def productDetail(request, product_id):
     return render(request, "product.html", context)
 
 
+def car(request):
+    return render(request, "car.html")
+
+
+def addToCar(request, product_id):
+    if request.method == "POST":
+        cuantity = int(request.POST["cuantity"])
+    else:
+        cuantity = 1
+
+    product = Product.objects.get(pk=product_id)
+    carProduct = Car(request)
+    carProduct.add(product, cuantity)
+
+    if request.method == "GEt":
+        return redirect("/")
+
+    return render(request, "car.html")
+
+
+def deleteProductToCar(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    car = Car(request)
+    car.delete(product)
+
+    return render(request, "car.html")
+
+
+def clearCar(request):
+    car = Car(request)
+    car.clear()
+
+    return render(request, "car.html")
