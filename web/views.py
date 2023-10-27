@@ -58,7 +58,7 @@ def car(request):
 
 
 def addToCar(request, product_id):
-    if request.method == "POST":
+    if request.method == 'POST':
         cuantity = int(request.POST["cuantity"])
     else:
         cuantity = 1
@@ -86,3 +86,55 @@ def clearCar(request):
     car.clear()
 
     return render(request, "car.html")
+
+""
+"""Views for Clients and Users"""
+from django.contrib.auth.models import User
+from django.contrib.auth import login,logout,authenticate
+from .forms import Client
+
+def createUser(request):
+
+    if request.method == 'POST':
+        dataUser = request.POST.get("newUser")
+        dataPassword = request.POST.get("newPassword")
+        
+        newUser = User.objects.create_user(username=dataUser, password=dataPassword)
+        if newUser is not None:
+            login(request, newUser)
+            return redirect("/acount")    
+
+    return render(request, "login.html")
+
+
+def loginUser(request):
+    context = {}
+
+    if request.method == 'POST':
+        dataUser = request.POST['user']
+        dataPassword = request.POST['password']
+
+        userAuth = authenticate(request, username=dataUser, password=dataPassword)
+        if userAuth is not None:
+            login(request, userAuth)
+            return redirect("/acount")
+        else: 
+            context = {
+                "error": "Datos Incorrectos"
+            }
+
+    return render(request, "login.html", context)
+
+def userAcount(request):
+
+    clientForm = Client()
+    context = {
+        "clientForm": clientForm
+    }
+
+    return render(request, "cuenta.html", context)
+
+
+def updateUser(request):
+    pass
+    return render(request, "cuenta.html")
