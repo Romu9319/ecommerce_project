@@ -5,7 +5,7 @@ class DateInput(forms.DateInput):
     input_type="date"
 
 
-class Client(forms.Form):
+class ClientForm(forms.Form):
 
     CHOICES = (
         ("M","Male"),
@@ -16,8 +16,8 @@ class Client(forms.Form):
     name = forms.CharField(label="Name", max_length=200, required=True)
     last_name = forms.CharField(label="Lastname", max_length=200, required=True)
     email = forms.EmailField(label="Email", required=True)
-    direction = forms.CharField(label="Direction", widget=forms.Textarea)
+    address = forms.CharField(label="Address", widget=forms.Textarea)
     phone = forms.CharField(label="Phone", max_length=20)
-    sex = forms.ChoiceField(label="Sex", choices=CHOICES)
+    gender = forms.ChoiceField(label="Sex", choices=CHOICES)
     birthdate = forms.DateField(label="Birthdate", input_formats=["%Y-%m-%d"], widget=DateInput)
     

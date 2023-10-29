@@ -29,9 +29,9 @@ class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.RESTRICT)
     dni = models.CharField(max_length=10)
     gender = models.CharField(max_length=1, default="M")
-    fhone = models.CharField(max_length=20)
-    birthday_date = models.DateField(null=True)
-    diection = models.TextField() 
+    phone = models.CharField(max_length=20)
+    birthdate = models.DateField(null=True)
+    address = models.TextField() 
 
     def __str__(self):
         return self.dni

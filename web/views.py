@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Product
+from .models import Category, Product, Client
 from .car import Car
 
 # Create your views here.
@@ -87,11 +87,12 @@ def clearCar(request):
 
     return render(request, "car.html")
 
-""
+
 """Views for Clients and Users"""
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
-from .forms import Client
+from django.contrib.auth.decorators import login_required
+from .forms import ClientForm
 
 def createUser(request):
 
@@ -108,26 +109,60 @@ def createUser(request):
 
 
 def loginUser(request):
-    context = {}
+    landingPage = request.GET.get("next", None)
+    context = {
+        "destination": landingPage
+    }
 
     if request.method == 'POST':
         dataUser = request.POST['user']
         dataPassword = request.POST['password']
+        dataDestination = request.POST["destination"]
 
         userAuth = authenticate(request, username=dataUser, password=dataPassword)
         if userAuth is not None:
             login(request, userAuth)
+            
+            if dataDestination != "None":
+                return redirect(dataDestination)
+            
             return redirect("/acount")
         else: 
             context = {
-                "error": "Datos Incorrectos"
+                "error": "Incorrect data"
             }
 
     return render(request, "login.html", context)
 
+
+def logoutUser(request):
+    logout(request)
+    return render(request, "login.html")
+
+
 def userAcount(request):
 
-    clientForm = Client()
+    try:
+        editClient = Client.objects.get(user = request.user)
+
+        dataClient = {
+            "name": request.user.first_name,
+            "last name": request.user.last_name,
+            "email": request.user.email,
+            "address": editClient.address,
+            "phone": editClient.phone,
+            "dni": editClient.dni,
+            "gender": editClient.gender,
+            "birthdate": editClient.birthdate
+        }
+    except:
+        dataClient = {
+            "name": request.user.first_name,
+            "last name": request.user.last_name,
+            "email": request.user.email
+            }
+
+    clientForm = ClientForm(dataClient)
     context = {
         "clientForm": clientForm
     }
@@ -135,6 +170,66 @@ def userAcount(request):
     return render(request, "cuenta.html", context)
 
 
-def updateUser(request):
-    pass
-    return render(request, "cuenta.html")
+def updateClient(request):
+    menssage = ""
+
+    if request.method == "POST":
+        clientForm = ClientForm(request.POST)
+        if clientForm.is_valid():
+            dataClient = clientForm.cleaned_data
+            # updating user
+            updateUser = User.objects.get(pk=request.user.id)
+            updateUser.first_name = dataClient["name"]
+            updateUser.last_name =  dataClient["last_name"]
+            updateUser.email = dataClient["email"]
+            updateUser.save()
+            # sing up client
+            newClient = Client()
+            newClient.user = updateUser
+            newClient.dni = dataClient["dni"]
+            newClient.address = dataClient["address"]
+            newClient.phone = dataClient["phone"]
+            newClient.gender = dataClient["gender"]
+            newClient.birthdate = dataClient["birthdate"]
+            newClient.save()
+
+            menssage = "Data update"
+    
+    context = {
+        "menssage": menssage,
+        "clientForm": clientForm
+    }
+
+
+    return render(request, "cuenta.html", context)
+
+
+    #Registrar Pedido
+@login_required(login_url="/login")
+def registerOrder(request):
+    try:
+        editClient = Client.objects.get(user = request.user)
+
+        dataClient = {
+            "name": request.user.first_name,
+            "last name": request.user.last_name,
+            "email": request.user.email,
+            "address": editClient.address,
+            "phone": editClient.phone,
+            "dni": editClient.dni,
+            "gender": editClient.gender,
+            "birthdate": editClient.birthdate
+        }
+    except:
+        dataClient = {
+            "name": request.user.first_name,
+            "last name": request.user.last_name,
+            "email": request.user.email
+            }
+
+    clientForm = ClientForm(dataClient)
+    context = {
+        "clientForm": clientForm
+    }
+
+    return render(request, "pedido.html", context)

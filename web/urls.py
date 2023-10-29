@@ -14,5 +14,8 @@ urlpatterns = [
     path("clearCar", views.clearCar, name="clearCar"),
     path("createUser", views.createUser, name="createUser") ,
     path("acount", views.userAcount, name="acount"),
-    path("login", views.loginUser, name="loginUser")
+    path("updateClient", views.updateClient, name="updateClient"),
+    path("login", views.loginUser, name="loginUser"),
+    path("logout", views.logoutUser, name="logoutUser"),
+    path("registerOrder", views.registerOrder, name="registerOrder")
 ]
