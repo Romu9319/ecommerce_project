@@ -18,6 +18,6 @@ urlpatterns = [
     path("login", views.loginUser, name="loginUser"),
     path("logout", views.logoutUser, name="logoutUser"),
     path("registerOrder", views.registerOrder, name="registerOrder"),
-    path("confirmOrder", views.confirmOrder, name="confirmOrder")
-
+    path("confirmOrder", views.confirmOrder, name="confirmOrder"),
+    path("thanks", views.thanks, name="thanks")
 ]

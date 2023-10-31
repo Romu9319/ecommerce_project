@@ -3,7 +3,7 @@ from django.urls import reverse
 from .models import Category, Product, Client, Order, DetailOrder
 from .car import Car
 from paypal.standard.forms import PayPalPaymentsForm
-
+from django.core.mail import send_mail
 # Create your views here.
 
 def index(request):
@@ -133,7 +133,6 @@ def loginUser(request):
             context = {
                 "error": "Incorrect data"
             }
-
     return render(request, "login.html", context)
 
 
@@ -149,7 +148,7 @@ def userAcount(request):
 
         dataClient = {
             "name": request.user.first_name,
-            "last name": request.user.last_name,
+            "last_name": request.user.last_name,
             "email": request.user.email,
             "address": editClient.address,
             "phone": editClient.phone,
@@ -160,7 +159,7 @@ def userAcount(request):
     except:
         dataClient = {
             "name": request.user.first_name,
-            "last name": request.user.last_name,
+            "last_name": request.user.last_name,
             "email": request.user.email
             }
 
@@ -214,7 +213,7 @@ def registerOrder(request):
 
         dataClient = {
             "name": request.user.first_name,
-            "last name": request.user.last_name,
+            "last_name": request.user.last_name,
             "email": request.user.email,
             "address": editClient.address,
             "phone": editClient.phone,
@@ -225,7 +224,7 @@ def registerOrder(request):
     except:
         dataClient = {
             "name": request.user.first_name,
-            "last name": request.user.last_name,
+            "last_name": request.user.last_name,
             "email": request.user.email
             }
 
@@ -265,7 +264,7 @@ def confirmOrder(request):
 
         # detalles del pedido
         orderCar = request.session.get("car")
-        print("esto es order car", orderCar)
+       
         for key,value in orderCar.items():
             productOrder = Product.objects.get(pk=value["product_id"])
             detail = DetailOrder()
@@ -281,6 +280,9 @@ def confirmOrder(request):
         newOrder.total = totalAmount
         newOrder.save()
 
+        #variable de session
+        request.session["orderId"] = newOrder.id
+
         # Boton Paypal        
         paypal_dict = {
             "business": "sb-nntlf27846788@business.example.com",
@@ -288,7 +290,7 @@ def confirmOrder(request):
             "item_name": "Order Code:" + numberOrder,
             "invoice": numberOrder,
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
-            "return": request.build_absolute_uri('/'),
+            "return": request.build_absolute_uri('/thanks'),
             "cancel_return": request.build_absolute_uri('/logout')
         }
 
@@ -305,6 +307,25 @@ def confirmOrder(request):
         car.clear()
 
     return render(request, "compra.html", context) 
+
+@login_required(login_url="/login")
+def thanks(request):
+    paypalId = request.GET.get("PayerID",None)
+    context = {}
+    if paypalId is not None:
+        orderId = request.session.get("orderId")
+        order = Order.objects.get(pk=orderId)
+        order.state = "1"
+        order.save()
+        
+        context = {
+            "order": order
+        }
+
+    else:
+        return redirect("/")
+
+    return render(request, "gracias.html", context)
 
 
 
