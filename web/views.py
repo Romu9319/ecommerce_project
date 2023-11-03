@@ -4,6 +4,8 @@ from .models import Category, Product, Client, Order, DetailOrder
 from .car import Car
 from paypal.standard.forms import PayPalPaymentsForm
 from django.core.mail import send_mail
+from django.conf import settings
+
 # Create your views here.
 
 def index(request):
@@ -285,7 +287,7 @@ def confirmOrder(request):
 
         # Boton Paypal        
         paypal_dict = {
-            "business": "sb-nntlf27846788@business.example.com",
+            "business": settings.PAYPAL_USER_EMAIL,
             "amount": totalAmount,
             "item_name": "Order Code:" + numberOrder,
             "invoice": numberOrder,
@@ -317,7 +319,7 @@ def thanks(request):
         order = Order.objects.get(pk=orderId)
         order.state = "1"
         order.save()
-        
+
         context = {
             "order": order
         }
